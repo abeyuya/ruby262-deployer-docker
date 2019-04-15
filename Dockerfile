@@ -17,20 +17,21 @@ RUN curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-c
 RUN chmod 755 /usr/local/bin/ecs-cli
 
 # node install
-# RUN set -ex \
-#     && apt-get update \
-#     && apt-get install -y \
-#                curl \
-#                netcat \
-#                apt-transport-https \
-#                --no-install-recommends \
-#     \
-#     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-#     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-#     && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
-#     && DEBIAN_FRONTEND=noninteractive apt-get -y install \
-#          yarn \
-#     && apt-get clean \
-#     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+RUN printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://archive.debian.org/debian/ jessie main\ndeb http://security.debian.org jessie/updates main\ndeb-src http://security.debian.org jessie/updates main" > /etc/apt/sources.list
+RUN set -ex \
+    && apt-get update \
+    && apt-get install -y \
+               curl \
+               netcat \
+               apt-transport-https \
+               --no-install-recommends \
+    \
+    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+    && DEBIAN_FRONTEND=noninteractive apt-get -y install \
+         yarn \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 RUN gem uninstall -ax bundler && gem install -v 1.17.2 bundler
